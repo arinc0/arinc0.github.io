@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf8"/>
+  <title>velocity</title>
+  <script>
+    let context;
+    // x座標の値
+    let positionX = 0;
+    // x座標向きの速度
+    // 補足speedはスカラーでvelocityは向きを持つベクトル
+    let velocityX = 5;
+
+    let positionY = 0;
+    let velocityY = 2;
+
+    function init () {
+      context = document.getElementById("viewer").getContext("2d");
+      // 100msごとに関数tick()を呼ぶ
+      // 1sごとに10回呼ばれる
+      setInterval(tick, 100);
+    }
+    // positionXをvelocityXの値だけ増やしている
+    function tick () {
+      positionX += velocityX;
+      if (positionX > 600) {
+        positionX = 0;
+      }
+      positionY += velocityY;
+      if (positionY > 600) {
+        positionY = 0;
+      }
+
+
+      paint();
+    }
+
+    function paint () {
+      context.fillStyle = "black";
+      // rectはレクタングル
+      // fillRect()の引数
+      // 矩形の始点となるx軸の座標
+      // 矩形の視点となるy軸の座標
+      // 矩形の幅、正の値で右、負の値で左へいく
+      // 矩形の高さ、正の値で下、負の値で上へいく
+      //
+      // x=0, y=0 の座標から右に600px、下に600pxの範囲をblackにする
+      context.fillRect(0, 0, 600, 600);
+
+      context.fillStyle = "white";
+      // x=positionX, y=200 の座標から 右に10px x 下に10pxの範囲を白にする
+      context.fillRect(positionX, positionY, 10, 10);
+
+      context.fill();
+    }
+  </script>
+</head>
+<body onload="init()">
+<canvas id="viewer" width="600" height="600" style="width:600px; height:600px" ></canvas>
+</body>
+</html>
