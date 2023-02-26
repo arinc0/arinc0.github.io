@@ -13,3 +13,6 @@
 
 ## 放物線を描きながらバウンドする
 - https://arinc0.github.io/games/gravity-acceleration
+
+## 重力に耐えながら飛ぶゲーム
+- https://arinc0.github.io/games/gravity-simple

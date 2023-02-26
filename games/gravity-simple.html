@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf8"/>
+  <title>gravity-simple</title>
+  <script>
+    let ctx;
+    let isFlying = false;
+    let timer;
+
+    // 真ん中くらい
+    let positionY = 300;
+    let velocityY = -20;
+    let accelY = 5;
+
+    let offset = 0;
+    let speed = 10;
+
+    function init () {
+      ctx = document.getElementById("viewer").getContext("2d");
+
+      ctx.font = "24px sans-serif";
+      // onkeyup, onkeydown ハンドラで isFlyingの値を制御する
+      onkeyup = function () {
+        isFlying = false;
+      }
+
+      onkeydown = function () {
+        isFlying = true;
+      }
+
+      timer = setInterval(tick, 100);
+    }
+    function tick () {
+      // 飛行状態なら上方向に加速、飛行状態でなければした方向に加速
+      velocityY += isFlying ? -accelY : accelY;
+      positionY += velocityY;
+      offset += speed;
+
+      if ((offset % 100) === 0) {
+        speed += 2;
+      }
+
+      paint();
+    }
+
+    function paint () {
+      ctx.fillStyle = "green";
+      ctx.fillRect(0, 0, 600, 600);
+
+      // 以下三角関数に関してはまだ理解しない
+      ctx.fillStyle = "brown";
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      for (let i =0; i <= 600; i+= 10) {
+        let up = 200 + Math.sin((i + offset) * Math.PI / 360) * 80;
+        ctx.lineTo(i, up);
+        if (i === 10 && positionY < up) {
+          clearInterval(timer)
+        }
+      }
+      ctx.lineTo(600, 0);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(0, 600);
+      for (let i = 0; i <= 600; i+=10) {
+        let down = 400 + Math.sin((i + offset) * Math.PI /340) * 80;
+        ctx.lineTo(i, down);
+        if (i === 10 && positionY + 10 > down) {
+          clearInterval(timer)
+        }
+      }
+      ctx.lineTo(620, 600);
+      ctx.fill();
+
+      ctx.fillStyle = "white";
+      ctx.fillRect(10, positionY, 10, 10);
+      ctx.fillText(offset, 500, 500);
+    }
+  </script>
+</head>
+<body onload="init()">
+<canvas id="viewer" width="600" height="600" style="width:600px; height:600px" ></canvas>
+</body>
+</html>
