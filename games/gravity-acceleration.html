@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf8"/>
+  <title>gravity-acceleration</title>
+  <script>
+    let ctx;
+    let positionX = 0;
+    let velocityX = 5;
+
+    let positionY = 600;
+    let velocityY = -20;
+
+    let accelY = 0.5;
+
+    function init () {
+      ctx = document.getElementById("viewer").getContext("2d");
+
+      setInterval(tick, 100);
+    }
+    function tick () {
+      positionX += velocityX;
+      if (positionX > 600) {
+        positionX = 0;
+      }
+
+      velocityY += accelY;
+      positionY += velocityY;
+      if (positionY > 600) {
+        velocityY = -20;
+      }
+      paint();
+    }
+
+    function paint () {
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, 600, 600);
+
+      ctx.fillStyle = "white";
+      ctx.fillRect(positionX, positionY, 10, 10);
+
+      ctx.fill();
+    }
+  </script>
+</head>
+<body onload="init()">
+<canvas id="viewer" width="600" height="600" style="width:600px; height:600px" ></canvas>
+</body>
+</html>

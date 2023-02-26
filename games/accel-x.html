@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf8"/>
+  <title>velocity</title>
+  <script>
+    let ctx;
+    let positionX=0;
+    let velocityX=5;
+
+    // x軸向きの加速度
+    let accelX = 0.4;
+
+    function init () {
+      ctx = document.getElementById("viewer").getContext("2d");
+
+      setInterval(tick, 100);
+    }
+    function tick () {
+      // 加速度の分だけ速度を増やす
+      velocityX += accelX;
+
+      positionX += velocityX;
+      if (positionX > 600) {
+        positionX = 0;
+      }
+      paint();
+    }
+
+    function paint () {
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, 600, 600);
+
+      ctx.fillStyle = "white";
+      ctx.fillRect(positionX, 200, 10, 10);s
+
+      ctx.fill();
+    }
+  </script>
+</head>
+<body onload="init()">
+<canvas id="viewer" width="600" height="600" style="width:600px; height:600px" ></canvas>
+</body>
+</html>
