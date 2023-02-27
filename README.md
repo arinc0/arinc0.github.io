@@ -16,3 +16,6 @@
 
 ## 重力に耐えながら飛ぶゲーム
 - https://arinc0.github.io/games/gravity-simple
+
+## 三角関数グラフ
+- https://arinc0.github.io/games/trigonometric-function
