@@ -5,6 +5,7 @@
   <title>trigonometric function graph</title>
   <script>
     let ctx;
+    // 角度
     let degree=0;
 
     function init () {
@@ -42,21 +43,30 @@
       drawLine(0, -300, 0, 300, "black");
       drawLine(-300, 0, 300, 0, "black");
 
-      let s0 = Math.sin(degree * Math.PI / 180).toFixed(3);
-      let c0 = Math.cos(degree * Math.PI / 180).toFixed(3);
+      // degreeは角度を表しているがMath.sinにはラジアンを指定しなければならない
+      // 360°は2Πラジアンなので、degree/360*2Π => degree*Π/180 となる
+      // toFixed()で小数点3桁まで取得している(4桁目の数値で丸める)
+      let sin0 = Math.sin(degree * Math.PI / 180).toFixed(3);
+      let cos0 = Math.cos(degree * Math.PI / 180).toFixed(3);
 
-      let c = c0 * 200;
-      let s = s0 * -200;
+      // 円の半径
+      const radius = 200;
+      // sin0, cos0は半径が1の時のsin,cosの値なので、半径に合わせた数値に変換する
+      let cos = cos0 * radius;
+      let sin = sin0 * -radius;
+      drawLine(0, 0, cos, sin, "red");
 
-      drawLine(0, 0, c, s, "red");
-      ctx.arc(0, 0, 200, 0, Math.PI * 2);
+      // 角度0から2Πラジアン(360°)
+      ctx.arc(0, 0, radius, 0, Math.PI * 2);
       ctx.stroke();
 
       // ラベル
-      drawLine(c, s, c, 0, "blue");
-      ctx.strokeText("cos:" + c0, c - 10, 20);
-      drawLine(c, s, 0, s, "green");
-      ctx.strokeText("sin:" + s0, -40, s -10);
+      // 青色で線分と円の交点からx軸に直角に線を描く
+      drawLine(cos, sin, cos, 0, "blue");
+      ctx.strokeText("cos:" + cos0, cos - 20, 20);
+      // 緑色で線分と円の交点からy軸に直角に線を描く
+      drawLine(cos, sin, 0, sin, "green");
+      ctx.strokeText("sin:" + sin0, -40, sin -10);
 
       ctx.restore();
     }
