@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf8"/>
+  <title>trigonometric function graph with curve</title>
+  <script>
+    let ctx;
+    // 角度
+    let degree=0;
+
+    function init () {
+      let canvas = document.getElementById("graph");
+      ctx = canvas.getContext("2d");
+      ctx.font = "24px sans-serif";
+
+      setInterval(tick, 20)
+    }
+
+    function tick() {
+      degree++
+      paint()
+    }
+
+    function drawLine(x0, y0, x1, y1, color) {
+      ctx.strokeStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(x0, y0);
+      ctx.lineTo(x1,y1);
+      ctx.closePath();
+      ctx.stroke();
+    }
+
+    function paint () {
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, 600, 600);
+      ctx.save();
+      // 原点を移動
+      ctx.translate(100, 100);
+
+      // 座標軸
+      drawLine(0, -100, 0, 500, "black");
+      drawLine(-100, 0, 500, 0, "black");
+
+      // degreeは角度を表しているがMath.sinにはラジアンを指定しなければならない
+      // 360°は2Πラジアンなので、degree/360*2Π => degree*Π/180 となる
+      let sin0 = Math.sin(degree * Math.PI / 180);
+      let cos0 = Math.cos(degree * Math.PI / 180);
+
+      // 円の半径
+      const radius = 50;
+      // sin0, cos0は半径が1の時のsin,cosの値なので、半径に合わせた数値に変換する
+      let cos = cos0 * radius;
+      let sin = sin0 * -radius;
+      drawLine(0, 0, cos, sin, "red");
+
+      // 角度0から2Πラジアン(360°)
+      ctx.arc(0, 0, radius, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // sinカーブ
+      ctx.strokeStyle = 'green';
+      ctx.beginPath();
+      ctx.moveTo(cos, sin);
+      // iは0から499まで
+      // 円と線分の交点から(0, 現在の角度のsinθ*50)へ線を引く
+      // 以降はxの値が1ずつ増えるに従って、角度も1°ずつ増えていく
+      for (let i = 0; i < 500; i++) {
+        // 原点が(100, 100)
+        // Θが0-180°の間の時、sinθの値は0-1の値になる
+        // y軸の値が正である表現をしたい場合、負の数で指定する必要がある為
+        // -radiusを乗じている
+        let sin1 = Math.sin((degree + i) * Math.PI/180) * -radius
+        ctx.lineTo(i, sin1)
+      }
+      ctx.stroke()
+
+      // cosカーブ
+      ctx.strokeStyle ='blue'
+      ctx.beginPath()
+      ctx.moveTo(cos, sin)
+
+      for (let i = 0; i < 500; i++) {
+        let cos1 = Math.cos((degree + i) * Math.PI /180) * radius
+        ctx.lineTo(cos1, i)
+      }
+      ctx.stroke()
+
+      ctx.restore();
+    }
+  </script>
+</head>
+<body onload="init()">
+<canvas id="graph" width="600" height="600" ></canvas>
+</body>
+</html>
