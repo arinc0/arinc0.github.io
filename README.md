@@ -19,3 +19,6 @@
 
 ## 三角関数グラフ
 - https://arinc0.github.io/games/trigonometric-function
+
+## サインカーブ、コサインカーブ
+- https://arinc0.github.io/games/trigonometric-function-curve
