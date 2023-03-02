@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf8"/>
+  <title>sin curve</title>
+  <script>
+    let ctx;
+
+    function init () {
+      let canvas = document.getElementById("graph");
+      ctx = canvas.getContext("2d");
+
+      paint2();
+    }
+
+    function drawLine(x0, y0, x1, y1) {
+      ctx.beginPath();
+      ctx.moveTo(x0, y0);
+      ctx.lineTo(x1,y1);
+      ctx.closePath();
+      ctx.stroke();
+    }
+
+    // function paint () {
+    //   ctx.fillStyle = "white";
+    //   ctx.fillRect(0, 0, 800, 800);
+    //
+    //   ctx.strokeStyle = 'blue'
+    //   ctx.lineWidth = 4;
+    //
+    //   // (400, 400)を中心に座標軸を描画
+    //   drawLine(0, 400, 800, 400)
+    //   drawLine(400, 0, 400, 800)
+    //
+    //   ctx.strokeStyle = 'black'
+    //   ctx.lineWidth =1;
+    //
+    //   ctx.beginPath();
+    //   ctx.moveTo(0, 400)
+    //
+    //   for (let theta = -Math.PI*2; theta <= Math.PI * 2; theta+=0.1) {
+    //     let x = 400 * theta/(Math.PI * 2) +400
+    //     // sinは-1 ~ 1の範囲をとるので、縮尺を合わせるために300倍する(座標軸が(400,400)なので
+    //     // sinが0の時、y=0だと画面の上端になってしまうので、+400して座標軸に合わせる
+    //     let y = Math.sin(theta) * 300 + 400
+    //
+    //     ctx.lineTo(x,y)
+    //   }
+    //   ctx.stroke()
+    // }
+
+    // translate使うパターン
+    // 原点が移動するので直感的なコードになりやすい
+    function paint2() {
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, 800, 800);
+      ctx.save()
+
+      ctx.translate(400,400)
+      ctx.scale(1,-1)
+
+      ctx.strokeStyle = 'blue'
+      ctx.lineWidth = 4;
+
+      // (400, 400)を中心に座標軸を描画
+      drawLine(0, -400, 0, 400)
+      drawLine(-400, 0, 400, 0)
+
+      ctx.strokeStyle = 'black'
+      ctx.lineWidth =1;
+
+      ctx.beginPath();
+
+      for (let theta = -Math.PI*2; theta <= Math.PI * 2; theta+=0.1) {
+        let x = 400 * theta/(Math.PI * 2)
+        let y = Math.sin(theta) * 300
+
+        ctx.lineTo(x,y)
+      }
+      ctx.stroke()
+      ctx.restore()
+    }
+  </script>
+</head>
+<body onload="init()">
+<canvas id="graph" width="800" height="800" ></canvas>
+</body>
+</html>

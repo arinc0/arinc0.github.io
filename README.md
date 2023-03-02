@@ -22,3 +22,6 @@
 
 ## サインカーブ、コサインカーブ
 - https://arinc0.github.io/games/trigonometric-function-curve
+
+## サインカーブ
+- https://arinc0.github.io/games/sin-curve
