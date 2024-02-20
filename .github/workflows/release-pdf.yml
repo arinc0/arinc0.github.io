@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [main]
     paths: 'resume/README.md'
-  workflow_dispatch:
+    types: [closed]
 
 jobs:
   release:
@@ -21,12 +21,41 @@ jobs:
           node-version: 18
           cache: npm
       - run: npm install
-      - run: npm run build:pdf
-      - name: Create a draft release
+      - name: Build PDF
+        run: npm run build:pdf
+      ################ Create Tag & Release ################
+      - name: Create Tag
+        id: create-tag
+        if: github.event.pull_request.merged
+        run: |
+          PR_NUM=${{ github.event.number }}
+          PR_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/pull/${PR_NUM}"
+          TAG_NAME="release/${PR_NUM}-${GITHUB_SHA::7}"
+          PUSH_URL="https://${GITHUB_ACTOR}:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}"
+          git tag ${TAG_NAME}
+          git push ${PUSH_URL} ${TAG_NAME}
+          echo "::set-output name=tag-name::${TAG_NAME}"
+          echo "::set-output name=pr-num::${PR_NUM}"
+          echo "::set-output name=pr-url::${PR_URL}"
+      - name: Create Release
+        id: create-release
         uses: softprops/action-gh-release@v1
+        if: github.event.pull_request.merged
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          body: ${{ github.event.pull_request.title }}
+          tag_name: ${{ steps.create-tag.outputs.tag-name }}
+          name: "Release #${{ steps.create-tag.outputs.pr-num }}"
+          body: ${{ steps.create-tag.outputs.pr-url }}
           draft: true
-          fail_on_unmatched_files: true
-          files: resume/README.pdf
-          name: Release ${{ github.ref }}
+      - name: upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        if: github.event.pull_request.merged
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./resume/README.pdf
+          asset_name: resume.pdf
+          asset_content_type: application/pdf
